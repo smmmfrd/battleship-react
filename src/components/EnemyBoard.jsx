@@ -29,7 +29,7 @@ export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN }) {
     }
 
     return (
-        <div className="App">
+        <div className="enemy-board">
             <h1 className="text-3xl font-bold underline">
                 Time to Battle Ship!
             </h1>

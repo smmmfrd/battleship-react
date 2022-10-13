@@ -14,7 +14,9 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Navbar />} >
           <Route index element={<GameOptions />} />
-          <Route path="player" element={<PlayerBoardCreator />} />
+          <Route path="player" element={<PlayerBoardCreator
+            BOARD_SIZE={BOARD_SIZE}
+            SHIP_MARGIN={SHIP_MARGIN} />} />
           <Route path="game" element={<EnemyBoard
             BOARD_SIZE={BOARD_SIZE}
             SHIP_MARGIN={SHIP_MARGIN} />} />
