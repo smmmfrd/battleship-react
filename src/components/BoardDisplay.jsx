@@ -46,15 +46,15 @@ export default function BoardDisplay({ boardSize, shipMargin, shipData, boardDat
         var styles = {};
 
         const longSideLength = () => {
-            return 32 * length + (length - 1) * 4;
+            return 40 * length + (length - 1) * 4;
         }
 
         const getPosition = (val) => {
-            return (val * 36) + 4;
+            return (val * 44) + 4;
         }
 
-        styles.width = `${(vertical ? 32 : longSideLength()) - shipMargin * 2}px`;
-        styles.height = `${(vertical ? longSideLength() : 32) - shipMargin * 2}px`;
+        styles.width = `${(vertical ? 40 : longSideLength()) - shipMargin * 2}px`;
+        styles.height = `${(vertical ? longSideLength() : 40) - shipMargin * 2}px`;
         styles.left = `${getPosition(x) + shipMargin}px`;
         styles.top = `${getPosition(y) + shipMargin}px`;
         return styles;
@@ -63,8 +63,8 @@ export default function BoardDisplay({ boardSize, shipMargin, shipData, boardDat
     function placeMarker(position) {
         var styles = {};
         var [x, y] = [position % boardSize, parseInt(position / boardSize)];
-        x = (x * 36) + 4;
-        y = (y * 36) + 4;
+        x = (x * 44) + 4;
+        y = (y * 44) + 4;
         styles.left = `${x}px`;
         styles.top = `${y}px`;
         return styles;
