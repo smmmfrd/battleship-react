@@ -2,26 +2,37 @@ import GridSquare from "./GridSquare";
 
 export default function BoardDisplay({ boardSize, shipMargin, shipData, boardData, handleSquareClick }) {
 
-    var ships = shipData;
-
     function fillGrid() {
         var squares = [];
         for (let i = 0; i < boardSize * boardSize; i++) {
             // console.log(boardData[i]);
             squares.push(
-                <GridSquare key={i} handleClick={handleSquareClick} position={i}/>
+                <GridSquare key={i} position={i}
+                handleClick={boardData[i] > 0 ?  () => {} : handleSquareClick }/>
             );
             switch (boardData[i]) {
                 case 0:
                     break;
                 case 1:
-                    console.log("missed here");
+                    squares.push(
+                        <div 
+                        key={`${i} ${boardData[i]}`}
+                        className="w-6 h-6 m-1 bg-slate-200 rounded-full absolute z-10"
+                        style={placeMarker(i)}
+                        />
+                    );
                     break;
                 case 2:
-                    console.log("hit here");
+                    squares.push(
+                        <div 
+                        key={`${i} ${boardData[i]}`}
+                        className="w-6 h-6 m-1 bg-red-600 rounded-full absolute z-10"
+                        style={placeMarker(i)}
+                        />
+                    );
                     break;
                 default:
-                    console.log("Value not found: ", boardData[i]);
+                    console.error("Value not found: ", boardData[i]);
                     break;
             }
         }
@@ -46,7 +57,17 @@ export default function BoardDisplay({ boardSize, shipMargin, shipData, boardDat
         return styles;
     }
 
-    const shipElements = ships.map((ship, index) => {
+    function placeMarker(position) {
+        var styles = {};
+        var [x, y] = [position % boardSize, parseInt(position / boardSize)];
+        x = (x * 36) + 4;
+        y = (y * 36) + 4;
+        styles.left = `${x}px`;
+        styles.top = `${y}px`;
+        return styles;
+    }
+
+    const shipElements = shipData.map((ship, index) => {
         var shipName = `${ship.length} ${index}`;
         return <div
             key={shipName}
