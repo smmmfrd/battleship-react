@@ -74,7 +74,7 @@ export default function BoardDisplay({ boardSize, shipMargin, shipData, boardDat
             className='absolute bg-slate-500 rounded-3xl pointer-events-none' 
             style={placeShip(ship)}
         />
-    })
+    });
 
     return (
         <div className="w-max h-max mx-auto mt-4 relative
