@@ -18,10 +18,10 @@ export default function App() {
     setEnemyBoard(() => {
       var newBoard = GameBoard(BOARD_SIZE);
       newBoard.addShip(0, 0, 2, false);
-      newBoard.addShip(1, 1, 3, false);
       newBoard.addShip(3, 0, 3, false);
-      newBoard.addShip(2, 3, 4, false);
       newBoard.addShip(0, 1, 5, true);
+      newBoard.addShip(1, 1, 3, false);
+      newBoard.addShip(2, 3, 4, false);
       return newBoard;
     });
   }, []);
@@ -29,7 +29,16 @@ export default function App() {
   // TEMP - a peek into the enemy board.
   useEffect(() => {
     console.log(enemyBoard);
-  }, [enemyBoard])
+  }, [enemyBoard]);
+
+  function handleSquareClick(position){
+    // console.log("x:", position % BOARD_SIZE, "y: ", parseInt(position / BOARD_SIZE));
+    setEnemyBoard(prevBoard => {
+      var newBoard = {...prevBoard}
+      newBoard.attacked(position);
+      return newBoard;
+    });
+  }
 
   return (
     <div className="App">
@@ -40,6 +49,8 @@ export default function App() {
         boardSize={BOARD_SIZE}
         shipMargin={SHIP_MARGIN}
         shipData={enemyBoard.ships}
+        boardData={enemyBoard.board}
+        handleSquareClick={handleSquareClick}
       />
     </div>
   );

@@ -1,16 +1,29 @@
-import { useState, useEffect } from "react";
 import GridSquare from "./GridSquare";
 
-export default function BoardDisplay({ boardSize, shipMargin, shipData }) {
+export default function BoardDisplay({ boardSize, shipMargin, shipData, boardData, handleSquareClick }) {
 
     var ships = shipData;
 
     function fillGrid() {
         var squares = [];
         for (let i = 0; i < boardSize * boardSize; i++) {
+            // console.log(boardData[i]);
             squares.push(
-                <GridSquare key={i} />
-            )
+                <GridSquare key={i} handleClick={handleSquareClick} position={i}/>
+            );
+            switch (boardData[i]) {
+                case 0:
+                    break;
+                case 1:
+                    console.log("missed here");
+                    break;
+                case 2:
+                    console.log("hit here");
+                    break;
+                default:
+                    console.log("Value not found: ", boardData[i]);
+                    break;
+            }
         }
         return squares;
     }
@@ -37,7 +50,7 @@ export default function BoardDisplay({ boardSize, shipMargin, shipData }) {
         var shipName = `${ship.length} ${index}`;
         return <div
             key={shipName}
-            className='absolute bg-slate-500 rounded-3xl' 
+            className='absolute bg-slate-500 rounded-3xl pointer-events-none' 
             style={placeShip(ship)}
         />
     })
