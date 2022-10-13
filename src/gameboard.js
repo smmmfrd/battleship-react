@@ -13,6 +13,33 @@ export default function GameBoard(boardSize){
         board.push(BoardState.EMPTY);
     }
 
+    function goodPosition(position, length, vertical) {
+        var testPositions = [];
+        for (let i = 0; i < length; i++) {
+            if(vertical) {
+                testPositions.push(position + (i * boardSize));
+            } else {
+                testPositions.push(position + i);
+            }
+        }
+        var valid = true;
+        testPositions.forEach(pos => {
+            // Check if any ships are there
+            if(shipLocations.includes(pos)) {
+                valid = false;
+            }
+            // Make sure not out of bounds vertically
+            if(pos >= boardSize * boardSize) {
+                valid = false;
+            }
+            // Make sure not out of bounds horizontally
+            if(!vertical && parseInt(testPositions[0] / boardSize) != parseInt(pos / boardSize)) {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+
     function addShip(x, y, length, vertical) {
         ships.push({x, y, length, vertical});
         var shipPosition = x + (y * boardSize);
@@ -29,6 +56,7 @@ export default function GameBoard(boardSize){
         board,
         addShip,
         ships,
-        attacked
+        attacked,
+        goodPosition
     }
 }

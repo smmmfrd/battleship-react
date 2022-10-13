@@ -14,6 +14,15 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN}) {
         }
     }, []);
 
+    // TEMP - setting up some ships for placement
+    useEffect(() => {
+        setPlayerBoard(() => {
+            var newBoard = GameBoard(BOARD_SIZE);
+            newBoard.addShip(0, 0, 3, false);
+            return newBoard;
+        })
+    },[])
+
     // Set up rotate input
     useEffect(() => {
         window.addEventListener("keydown", handleKeyPress);
@@ -33,7 +42,7 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN}) {
     }, [shipStats]);
 
     function handleClick(position) {
-        console.log(position);
+        console.log("Ship Placement at ", position, " Valid: ", playerBoard.goodPosition(position, shipStats.length, shipStats.vertical));
     }
 
     function handleEnter(position) {
@@ -61,7 +70,6 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN}) {
                 boardData={playerBoard.board}
                 handleSquareClick={handleClick}
                 handleSquareEnter={handleEnter}
-                handleSquareLeave={handleLeave}
             >
                 <div ref={shipPlacer} className="bg-gray-500 border-2
                 border-gray-800 absolute pointer-events-none hidden"/>

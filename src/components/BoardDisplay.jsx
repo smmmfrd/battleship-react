@@ -1,7 +1,7 @@
 import GridSquare from "./GridSquare";
 
 export default function BoardDisplay({ boardSize, shipMargin, shipData, boardData, children,
-    handleSquareClick, handleSquareEnter = () => {}, handleSquareLeave = () => {} }) {
+    handleSquareClick, handleSquareEnter = () => {} }) {
 
     function fillGrid() {
         var squares = [];
@@ -10,8 +10,7 @@ export default function BoardDisplay({ boardSize, shipMargin, shipData, boardDat
             squares.push(
                 <GridSquare key={i} position={i}
                     handleClick={boardData[i] > 0 ? () => {} : handleSquareClick }
-                    handleEnter={handleSquareEnter}
-                    handleLeave={handleSquareLeave} />
+                    handleEnter={handleSquareEnter} />
             );
             switch (boardData[i]) {
                 case 0:
