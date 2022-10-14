@@ -1,21 +1,24 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useContext } from "react";
 import { Link } from "react-router-dom";
+import { GameContext } from "../gameContext";
 import BoardDisplay from "./BoardDisplay";
 import GameBoard from "../gameboard";
 
 export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS, boardFinished}) {
     var shipLengthIndex = useRef(0);
-    
+    const {setBoard} = useContext(GameContext);
+
     const [playerBoard, setPlayerBoard] = useState(GameBoard(BOARD_SIZE));
+    const [currentPosition, setCurrentPosition] = useState(0);
     const [shipStats, setShipStats] = useState(
         {
             length: SHIP_LENGTHS[shipLengthIndex.current], 
             vertical: false
         });
-    const [currentPosition, setCurrentPosition] = useState(0);
     const shipPlacer = useRef();
 
     const handleKeyPress = useCallback(event => {
+        // If the player pressed "R"
         if(event.keyCode === 82) {
             var vertical = !shipStats.vertical
             setShipStats(prevShip => ({...prevShip, vertical: vertical}));
@@ -23,7 +26,7 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
         }
     }, [shipStats, currentPosition]);
 
-    // Set up rotate input
+    // Set up rotate input on mount
     useEffect(() => {
         window.addEventListener("keydown", handleKeyPress);
 
@@ -32,6 +35,7 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
         }
     }, [handleKeyPress]);
 
+    // Handle placing ship's size
     useEffect(() => {
         const longSideLength = () => {
             return 40 * shipStats.length + (shipStats.length - 1) * 4;
@@ -42,19 +46,25 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
     }, [shipStats]);
 
     function handleClick(position) {
+        // Escape condition
         if(shipLengthIndex.current >= SHIP_LENGTHS.length){return;}
 
         if(playerBoard.goodPosition(position, shipStats.length, shipStats.vertical)){
+            // Convert array index (position) to 2D coordinates
             var [x, y] = [position % BOARD_SIZE, parseInt(position / BOARD_SIZE)];
+            // Update the board
             setPlayerBoard(prevBoard => {
                 var newBoard = {...prevBoard};
                 newBoard.addShip(x, y, shipStats.length, shipStats.vertical);
                 return newBoard;
             });
+            // Force the placer to be invalid
             shipPlacerValidPosition(false);
 
+            // Go to the next index
             shipLengthIndex.current++;
             
+            // Get our next length
             if(shipLengthIndex.current < SHIP_LENGTHS.length){
                 setShipStats(prevStats => ({...prevStats, length: SHIP_LENGTHS[shipLengthIndex.current]}));
             } else {
@@ -65,6 +75,7 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
     }
 
     function handleEnter(position, vertical = shipStats.vertical) {
+        // Escape condition
         if(shipLengthIndex.current >= SHIP_LENGTHS.length){return;}
 
         var [x, y] = [position % BOARD_SIZE, parseInt(position / BOARD_SIZE)];
@@ -112,7 +123,7 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
                 absolute pointer-events-none hidden"/>
             </BoardDisplay>
             {shipLengthIndex.current >= SHIP_LENGTHS.length && 
-                <Link onClick={() => boardFinished(playerBoard)} to="/game">Start Game</Link>}
+                <Link onClick={() => setBoard(playerBoard)} to="/game">Start Game</Link>}
         </div>
     );
 }

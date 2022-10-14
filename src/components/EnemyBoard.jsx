@@ -4,7 +4,7 @@ import GameBoard from "../gameboard";
 
 import BoardDisplay from "./BoardDisplay";
 
-export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN }) {
+export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS }) {
     const [enemyBoard, setEnemyBoard] = useState(GameBoard(BOARD_SIZE));
 
     // TEMP - placing ships on a static board
@@ -18,6 +18,7 @@ export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN }) {
             newBoard.addShip(2, 3, 4, false);
             return newBoard;
         });
+        console.log("i need to make my own board!", SHIP_LENGTHS);
     }, []);
 
     function handleSquareClick(position) {
@@ -30,9 +31,6 @@ export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN }) {
 
     return (
         <div className="enemy-board">
-            <h1 className="text-3xl font-bold underline">
-                Time to Battle Ship!
-            </h1>
             <BoardDisplay
                 boardSize={BOARD_SIZE}
                 shipMargin={SHIP_MARGIN}
