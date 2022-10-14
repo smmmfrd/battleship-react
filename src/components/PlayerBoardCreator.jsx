@@ -42,7 +42,15 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN}) {
     }, [shipStats]);
 
     function handleClick(position) {
-        console.log("Ship Placement at ", position, " Valid: ", playerBoard.goodPosition(position, shipStats.length, shipStats.vertical));
+        if(playerBoard.goodPosition(position, shipStats.length, shipStats.vertical)){
+            var [x, y] = [position % BOARD_SIZE, parseInt(position / BOARD_SIZE)];
+            setPlayerBoard(prevBoard => {
+                var newBoard = {...prevBoard};
+                newBoard.addShip(x, y, shipStats.length, shipStats.vertical);
+                return newBoard;
+            });
+            shipPlacerValidPosition(false);
+        }
     }
 
     function handleEnter(position) {
@@ -54,14 +62,20 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN}) {
         shipPlacer.current.style.display = 'block';
 
         var valid = playerBoard.goodPosition(position, shipStats.length, shipStats.vertical);
+        shipPlacerValidPosition(valid);
+    }
+
+    function shipPlacerValidPosition(valid) {
         if(valid) {
             shipPlacer.current.classList.add("bg-gray-500");
             shipPlacer.current.classList.add("border-gray-800");
             shipPlacer.current.classList.remove("bg-red-500");
-            shipPlacer.current.classList.remove("bg-red-800");
+            shipPlacer.current.classList.remove("border-red-800");
+            shipPlacer.current.style.opacity = "100%";
         } else {
             shipPlacer.current.classList.add("bg-red-500");
-            shipPlacer.current.classList.add("bg-red-800");
+            shipPlacer.current.classList.add("border-red-800");
+            shipPlacer.current.style.opacity = "50%";
             shipPlacer.current.classList.remove("bg-gray-500");
             shipPlacer.current.classList.remove("border-gray-800");
         }
