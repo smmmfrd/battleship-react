@@ -5,7 +5,7 @@ import GameBoard from "../gameboard";
 
 export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
     var shipLengthIndex = useRef(0);
-    console.log(shipLengthIndex);
+    
     const [playerBoard, setPlayerBoard] = useState(GameBoard(BOARD_SIZE));
     const [shipStats, setShipStats] = useState(
         {
@@ -18,15 +18,7 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
         if(event.keyCode === 82) {
             setShipStats(prevShip => ({...prevShip, vertical: !prevShip.vertical}));
         }
-    }, []);
-
-    // TEMP - setting up some ships for placement
-    useEffect(() => {
-        setPlayerBoard(() => {
-            var newBoard = GameBoard(BOARD_SIZE);
-            return newBoard;
-        })
-    },[])
+    }, []); 
 
     // Set up rotate input
     useEffect(() => {
@@ -47,6 +39,8 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
     }, [shipStats]);
 
     function handleClick(position) {
+        if(shipLengthIndex.current >= SHIP_LENGTHS.length){return;}
+
         if(playerBoard.goodPosition(position, shipStats.length, shipStats.vertical)){
             var [x, y] = [position % BOARD_SIZE, parseInt(position / BOARD_SIZE)];
             setPlayerBoard(prevBoard => {
@@ -56,15 +50,19 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
             });
             shipPlacerValidPosition(false);
 
+            shipLengthIndex.current++;
+            
             if(shipLengthIndex.current < SHIP_LENGTHS.length){
-                shipLengthIndex.current++;
                 setShipStats(prevStats => ({...prevStats, length: SHIP_LENGTHS[shipLengthIndex.current]}));
             } else {
+                // Ships are all placed.
+                shipPlacer.current.style.display = "none";
             }
         }
     }
 
     function handleEnter(position) {
+        if(shipLengthIndex.current >= SHIP_LENGTHS.length){return;}
         var [x, y] = [position % BOARD_SIZE, parseInt(position / BOARD_SIZE)];
         x = (x * 44) + 4;
         y = (y * 44) + 4;
@@ -108,7 +106,8 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
                 <div ref={shipPlacer} className="border-2
                 absolute pointer-events-none hidden"/>
             </BoardDisplay>
-            <Link to="/game">Start Game</Link>
+            {shipLengthIndex.current >= SHIP_LENGTHS.length && 
+                <Link to="/game">Start Game</Link>}
         </div>
     );
 }
