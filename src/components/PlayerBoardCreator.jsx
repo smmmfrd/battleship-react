@@ -52,14 +52,23 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN}) {
         shipPlacer.current.style.left = `${x}px`;
         shipPlacer.current.style.top = `${y}px`;
         shipPlacer.current.style.display = 'block';
-    }
 
-    function handleLeave(position) {
-        //shipPlacer.current.style.display = 'none';
+        var valid = playerBoard.goodPosition(position, shipStats.length, shipStats.vertical);
+        if(valid) {
+            shipPlacer.current.classList.add("bg-gray-500");
+            shipPlacer.current.classList.add("border-gray-800");
+            shipPlacer.current.classList.remove("bg-red-500");
+            shipPlacer.current.classList.remove("bg-red-800");
+        } else {
+            shipPlacer.current.classList.add("bg-red-500");
+            shipPlacer.current.classList.add("bg-red-800");
+            shipPlacer.current.classList.remove("bg-gray-500");
+            shipPlacer.current.classList.remove("border-gray-800");
+        }
     }
 
     return (
-        <div className="enemy-board">
+        <div className="player-board">
             <h1 className="text-3xl font-bold underline">
                 Time to Build Your Board!
             </h1>
@@ -71,8 +80,8 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN}) {
                 handleSquareClick={handleClick}
                 handleSquareEnter={handleEnter}
             >
-                <div ref={shipPlacer} className="bg-gray-500 border-2
-                border-gray-800 absolute pointer-events-none hidden"/>
+                <div ref={shipPlacer} className="border-2
+                absolute pointer-events-none hidden"/>
             </BoardDisplay>
             <Link to="/game">Start Game</Link>
         </div>
