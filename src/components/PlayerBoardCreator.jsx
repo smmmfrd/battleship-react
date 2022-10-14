@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import BoardDisplay from "./BoardDisplay";
 import GameBoard from "../gameboard";
 
-export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
+export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS, boardFinished}) {
     var shipLengthIndex = useRef(0);
     
     const [playerBoard, setPlayerBoard] = useState(GameBoard(BOARD_SIZE));
@@ -12,13 +12,16 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
             length: SHIP_LENGTHS[shipLengthIndex.current], 
             vertical: false
         });
+    const [currentPosition, setCurrentPosition] = useState(0);
     const shipPlacer = useRef();
 
     const handleKeyPress = useCallback(event => {
         if(event.keyCode === 82) {
-            setShipStats(prevShip => ({...prevShip, vertical: !prevShip.vertical}));
+            var vertical = !shipStats.vertical
+            setShipStats(prevShip => ({...prevShip, vertical: vertical}));
+            handleEnter(currentPosition, vertical);
         }
-    }, []); 
+    }, [shipStats, currentPosition]);
 
     // Set up rotate input
     useEffect(() => {
@@ -61,8 +64,9 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
         }
     }
 
-    function handleEnter(position) {
+    function handleEnter(position, vertical = shipStats.vertical) {
         if(shipLengthIndex.current >= SHIP_LENGTHS.length){return;}
+
         var [x, y] = [position % BOARD_SIZE, parseInt(position / BOARD_SIZE)];
         x = (x * 44) + 4;
         y = (y * 44) + 4;
@@ -70,8 +74,9 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
         shipPlacer.current.style.top = `${y}px`;
         shipPlacer.current.style.display = 'block';
 
-        var valid = playerBoard.goodPosition(position, shipStats.length, shipStats.vertical);
+        var valid = playerBoard.goodPosition(position, shipStats.length, vertical);
         shipPlacerValidPosition(valid);
+        setCurrentPosition(position);
     }
 
     function shipPlacerValidPosition(valid) {
@@ -107,7 +112,7 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
                 absolute pointer-events-none hidden"/>
             </BoardDisplay>
             {shipLengthIndex.current >= SHIP_LENGTHS.length && 
-                <Link to="/game">Start Game</Link>}
+                <Link onClick={() => boardFinished(playerBoard)} to="/game">Start Game</Link>}
         </div>
     );
 }

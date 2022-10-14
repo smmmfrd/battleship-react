@@ -19,7 +19,8 @@ export default function App() {
           <Route path="player" element={<PlayerBoardCreator
             BOARD_SIZE={BOARD_SIZE}
             SHIP_MARGIN={SHIP_MARGIN} 
-            SHIP_LENGTHS={SHIP_LENGTHS}/>} />
+            SHIP_LENGTHS={SHIP_LENGTHS}
+            boardFinished={(playerBoard) => console.log(playerBoard)}/>} />
           <Route path="game" element={<EnemyBoard
             BOARD_SIZE={BOARD_SIZE}
             SHIP_MARGIN={SHIP_MARGIN} />} />
