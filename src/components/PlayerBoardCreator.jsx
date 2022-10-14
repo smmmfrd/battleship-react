@@ -3,9 +3,15 @@ import { Link } from "react-router-dom";
 import BoardDisplay from "./BoardDisplay";
 import GameBoard from "../gameboard";
 
-export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN}) {
+export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
+    var shipLengthIndex = useRef(0);
+    console.log(shipLengthIndex);
     const [playerBoard, setPlayerBoard] = useState(GameBoard(BOARD_SIZE));
-    const [shipStats, setShipStats] = useState({length: 3, vertical: false});
+    const [shipStats, setShipStats] = useState(
+        {
+            length: SHIP_LENGTHS[shipLengthIndex.current], 
+            vertical: false
+        });
     const shipPlacer = useRef();
 
     const handleKeyPress = useCallback(event => {
@@ -18,7 +24,6 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN}) {
     useEffect(() => {
         setPlayerBoard(() => {
             var newBoard = GameBoard(BOARD_SIZE);
-            newBoard.addShip(0, 0, 3, false);
             return newBoard;
         })
     },[])
@@ -50,6 +55,12 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN}) {
                 return newBoard;
             });
             shipPlacerValidPosition(false);
+
+            if(shipLengthIndex.current < SHIP_LENGTHS.length){
+                shipLengthIndex.current++;
+                setShipStats(prevStats => ({...prevStats, length: SHIP_LENGTHS[shipLengthIndex.current]}));
+            } else {
+            }
         }
     }
 

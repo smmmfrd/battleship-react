@@ -8,6 +8,8 @@ const BOARD_SIZE = 6;
 
 const SHIP_MARGIN = 4;
 
+const SHIP_LENGTHS = [2, 3, 3, 4, 5];
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -16,7 +18,8 @@ export default function App() {
           <Route index element={<GameOptions />} />
           <Route path="player" element={<PlayerBoardCreator
             BOARD_SIZE={BOARD_SIZE}
-            SHIP_MARGIN={SHIP_MARGIN} />} />
+            SHIP_MARGIN={SHIP_MARGIN} 
+            SHIP_LENGTHS={SHIP_LENGTHS}/>} />
           <Route path="game" element={<EnemyBoard
             BOARD_SIZE={BOARD_SIZE}
             SHIP_MARGIN={SHIP_MARGIN} />} />
