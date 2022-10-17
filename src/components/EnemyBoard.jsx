@@ -11,15 +11,18 @@ export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS }) {
     useEffect(() => {
         setEnemyBoard(() => {
             var newBoard = GameBoard(BOARD_SIZE);
-            newBoard.addShip(0, 0, 2, false);
-            newBoard.addShip(3, 0, 3, false);
-            newBoard.addShip(0, 1, 5, true);
-            newBoard.addShip(1, 1, 3, false);
-            newBoard.addShip(2, 3, 4, false);
+            buildEnemyBoard(newBoard);
             return newBoard;
         });
-        console.log("i need to make my own board!", SHIP_LENGTHS);
     }, []);
+
+    function buildEnemyBoard(board) {
+        var placements = [];
+        for(let i = 0; i < BOARD_SIZE - 1; i++){
+            placements.push(i + (i * BOARD_SIZE) + Math.floor(Math.random() * BOARD_SIZE));
+        }
+        placements.forEach(pos => board.attacked(pos));
+    }
 
     function handleSquareClick(position) {
         setEnemyBoard(prevBoard => {

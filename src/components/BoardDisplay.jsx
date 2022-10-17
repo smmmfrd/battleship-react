@@ -1,12 +1,12 @@
 import GridSquare from "./GridSquare";
 
-export default function BoardDisplay({ boardSize, shipMargin, shipData, boardData, children,
+export default function BoardDisplay({ boardSize, shipMargin, shipData = [], boardData = [], children,
     handleSquareClick, handleSquareEnter = () => {} }) {
 
     function fillGrid() {
         var squares = [];
         for (let i = 0; i < boardSize * boardSize; i++) {
-            // console.log(boardData[i]);
+            
             squares.push(
                 <GridSquare key={i} position={i}
                     handleClick={boardData[i] > 0 ? () => {} : handleSquareClick }
@@ -19,7 +19,7 @@ export default function BoardDisplay({ boardSize, shipMargin, shipData, boardDat
                     squares.push(
                         <div 
                         key={`${i} ${boardData[i]}`}
-                        className="w-6 h-6 m-1 bg-slate-200 rounded-full absolute z-10"
+                        className="w-8 h-8 m-1 bg-slate-200 rounded-full absolute z-10"
                         style={placeMarker(i)}
                         />
                     );
@@ -28,7 +28,7 @@ export default function BoardDisplay({ boardSize, shipMargin, shipData, boardDat
                     squares.push(
                         <div 
                         key={`${i} ${boardData[i]}`}
-                        className="w-6 h-6 m-1 bg-red-600 rounded-full absolute z-10"
+                        className="w-8 h-8 m-1 bg-red-600 rounded-full absolute z-10"
                         style={placeMarker(i)}
                         />
                     );
@@ -84,7 +84,7 @@ export default function BoardDisplay({ boardSize, shipMargin, shipData, boardDat
             <div className="grid gap-1 grid-cols-6 grid-rows-6">
                 {fillGrid()}
             </div>
-            {shipElements}
+            {shipData.length > 0 && shipElements}
             {children}
         </div>
     );
