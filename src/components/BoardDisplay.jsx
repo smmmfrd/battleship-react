@@ -82,7 +82,7 @@ export default function BoardDisplay({ boardSize, shipMargin, shipData = [], boa
         <div className="w-max h-max mx-auto mt-4 relative
         border rounded-sm p-1 bg-slate-200 border-slate-200">
             <div className="grid gap-1 grid-cols-6 grid-rows-6">
-                {fillGrid()}
+                {boardData.length > 0 && fillGrid()}
             </div>
             {shipData.length > 0 && shipElements}
             {children}
