@@ -57,6 +57,7 @@ export default function GameBoard(boardSize){
         addShip,
         ships,
         attacked,
-        goodPosition
+        goodPosition,
+        shipLocations
     }
 }

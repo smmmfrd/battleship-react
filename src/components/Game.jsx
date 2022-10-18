@@ -5,25 +5,45 @@ import PlayerBoard from "./PlayerBoard";
 
 export default function Game({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
     const {playerBoard, setPlayerBoard, enemyBoard} = useContext(GameContext);
-    
+    var numHitsLose = SHIP_LENGTHS.reduce((val, length) => val + length, 0);
+
     // Wait for enemy board to change
     useEffect(() => {
         // Make sure it was from a player attack
         if(enemyBoard.board && enemyBoard.board.some(pos => pos > 0)) {
             // Check if player won
-            console.log("Number of hits on enemy's board:", enemyBoard.board.reduce((hits, current) => {
+            var enemyHits = enemyBoard.board.reduce((hits, current) => {
                 if(current != 2) {
                     return hits;
                 } else {
                     return hits + 1;
                 }
-            }, 0));
-            // If not, 
-            randomAttack();
+            }, 0);
+            if(enemyHits === numHitsLose) {
+                console.log('enemy lost');
+            } else {
+                // If not, 
+                perfectEnemyAttack();
+            }
         }
     }, [enemyBoard]);
 
-    function randomAttack() {
+    useEffect(() => {
+        var playerHits = playerBoard.board.reduce((hits, current) => {
+            if(current != 2) {
+                return hits;
+            } else {
+                return hits + 1;
+            }
+        }, 0);
+
+        // Check if enemy won
+        if(playerHits === numHitsLose) {
+            console.log('playerLost');
+        }
+    }, [playerBoard])
+
+    function randomEnemyAttack() {
         var validTargets = playerBoard.board.reduce((array, pos, index) => {
             if(pos === 0) {
                 return [...array, index];
@@ -36,17 +56,27 @@ export default function Game({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
         setPlayerBoard(prevBoard => {
             var newBoard = {...prevBoard};
             newBoard.attacked(validTargets[Math.floor(Math.random() * validTargets.length)]);
+            
             return newBoard;
         });
+    }
 
-        // Check if enemy won
-        console.log("Number of hits on player's board:", playerBoard.board.reduce((hits, current) => {
-            if(current != 2) {
-                return hits;
+    function perfectEnemyAttack() {
+        var validTargets = playerBoard.board.reduce((array, pos, index) => {
+            if(pos === 0 && playerBoard.shipLocations.includes(index)) {
+                return [...array, index];
             } else {
-                return hits + 1;
+                return array;
             }
-        }, 0));
+        }, []);
+
+        // Update the player's board
+        setPlayerBoard(prevBoard => {
+            var newBoard = {...prevBoard};
+            newBoard.attacked(validTargets[Math.floor(Math.random() * validTargets.length)]);
+
+            return newBoard;
+        });
     }
 
     return (
