@@ -4,7 +4,7 @@ import GameBoard from "../gameboard";
 
 import BoardDisplay from "./BoardDisplay";
 
-export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS }) {
+export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS, passTurn }) {
     const [enemyBoard, setEnemyBoard] = useState(GameBoard(BOARD_SIZE));
 
     // TEMP - placing ships on a static board
@@ -73,8 +73,6 @@ export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS }) {
                 }
             }
         });
-
-        placements.forEach(pos => board.attacked(pos.x + (pos.y * BOARD_SIZE)));
     }
 
     function handleSquareClick(position) {
@@ -83,6 +81,7 @@ export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS }) {
             newBoard.attacked(position);
             return newBoard;
         });
+        passTurn();
     }
 
     return (
