@@ -1,14 +1,27 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { GameContext } from "../gameContext";
 import EnemyBoard from "./EnemyBoard";
 import PlayerBoard from "./PlayerBoard";
 
 export default function Game({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
-    const {playerBoard, setBoard} = useContext(GameContext);
+    const {playerBoard, setPlayerBoard, enemyBoard} = useContext(GameContext);
     
-    function playerAttacked() {
-        randomAttack();
-    }
+    // Wait for enemy board to change
+    useEffect(() => {
+        // Make sure it was from a player attack
+        if(enemyBoard.board && enemyBoard.board.some(pos => pos > 0)) {
+            // Check if player won
+            console.log("Number of hits on enemy's board:", enemyBoard.board.reduce((hits, current) => {
+                if(current != 2) {
+                    return hits;
+                } else {
+                    return hits + 1;
+                }
+            }, 0));
+            // If not, 
+            randomAttack();
+        }
+    }, [enemyBoard]);
 
     function randomAttack() {
         var validTargets = playerBoard.board.reduce((array, pos, index) => {
@@ -20,11 +33,20 @@ export default function Game({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
         }, []);
 
         // Update the player's board
-        setBoard(prevBoard => {
+        setPlayerBoard(prevBoard => {
             var newBoard = {...prevBoard};
             newBoard.attacked(validTargets[Math.floor(Math.random() * validTargets.length)]);
             return newBoard;
         });
+
+        // Check if enemy won
+        console.log("Number of hits on player's board:", playerBoard.board.reduce((hits, current) => {
+            if(current != 2) {
+                return hits;
+            } else {
+                return hits + 1;
+            }
+        }, 0));
     }
 
     return (
@@ -34,7 +56,6 @@ export default function Game({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
                 BOARD_SIZE={BOARD_SIZE}
                 SHIP_MARGIN={SHIP_MARGIN}
                 SHIP_LENGTHS={SHIP_LENGTHS}
-                passTurn={playerAttacked}
             />
             <PlayerBoard 
                 BOARD_SIZE={BOARD_SIZE}

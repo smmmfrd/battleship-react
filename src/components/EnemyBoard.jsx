@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { GameContext } from "../gameContext";
 
 import GameBoard from "../gameboard";
 
 import BoardDisplay from "./BoardDisplay";
 
-export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS, passTurn }) {
-    const [enemyBoard, setEnemyBoard] = useState(GameBoard(BOARD_SIZE));
+export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS }) {
+    const {enemyBoard, setEnemyBoard} = useContext(GameContext);
 
     // TEMP - placing ships on a static board
     useEffect(() => {
@@ -81,7 +82,6 @@ export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS, pass
             newBoard.attacked(position);
             return newBoard;
         });
-        passTurn();
     }
 
     return (

@@ -3,13 +3,10 @@ const GameContext = React.createContext();
 
 function GameContextProvider({children}){
     const [playerBoard, setPlayerBoard] = useState({});
-
-    function setBoard(newBoard) {
-        setPlayerBoard(newBoard);
-    }
+    const [enemyBoard, setEnemyBoard] = useState({});
 
     return (
-        <GameContext.Provider value={{playerBoard, setBoard}}>
+        <GameContext.Provider value={{playerBoard, setPlayerBoard, enemyBoard, setEnemyBoard}}>
             {children}
         </GameContext.Provider>
     );
