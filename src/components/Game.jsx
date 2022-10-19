@@ -1,14 +1,16 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { GameContext } from "../gameContext";
 import EnemyBoard from "./EnemyBoard";
 import PlayerBoard from "./PlayerBoard";
 
 export default function Game({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
     const {playerBoard, setPlayerBoard, enemyBoard} = useContext(GameContext);
+    const newGameModal = useRef();
     var numHitsLose = SHIP_LENGTHS.reduce((val, length) => val + length, 0);
+    const [endingMessage, setEndingMessage] = useState('');
 
     useEffect(() => {
-        console.log('hey');
         // Make sure it was from a player attack
         if(enemyBoard.board && enemyBoard.board.some(pos => pos > 0)) {
             // Check if player won
@@ -20,7 +22,7 @@ export default function Game({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
                 }
             }, 0);
             if(enemyHits === numHitsLose) {
-                console.log('enemy lost');
+                gameOver(true);
             } else {
                 // If not, 
                 perfectEnemyAttack();
@@ -39,7 +41,7 @@ export default function Game({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
 
         // Check if enemy won
         if(playerHits === numHitsLose) {
-            console.log('playerLost');
+            gameOver(false);
         }
     }, [playerBoard])
 
@@ -79,8 +81,22 @@ export default function Game({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
         });
     }
 
+    function gameOver(playerWon) {
+        setEndingMessage(playerWon ? "You won!" : "You lost!");
+
+        newGameModal.current.addEventListener('cancel', (event) => {
+            event.preventDefault();
+        });
+        newGameModal.current.showModal();
+    }
+
     return (
         <>
+            <dialog ref={newGameModal}>
+                <h2>Game Over!</h2>
+                <p>{endingMessage}</p>
+                <Link to="/">Restart</Link>
+            </dialog>
             <h1 className="text-3xl font-bold underline">Time to Battle Ship!</h1>
             <EnemyBoard
                 BOARD_SIZE={BOARD_SIZE}
