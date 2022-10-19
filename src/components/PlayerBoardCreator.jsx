@@ -6,7 +6,7 @@ import GameBoard from "../gameboard";
 
 export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS, boardFinished}) {
     var shipLengthIndex = useRef(0);
-    const {setPlayerBoard: setContextBoard} = useContext(GameContext);
+    const {setPlayerBoard: setContextBoard, setEnemyBoard} = useContext(GameContext);
 
     const [playerBoard, setPlayerBoard] = useState(GameBoard(BOARD_SIZE));
     const [currentPosition, setCurrentPosition] = useState(0);
@@ -123,7 +123,11 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
                 absolute pointer-events-none hidden"/>
             </BoardDisplay>
             {shipLengthIndex.current >= SHIP_LENGTHS.length && 
-                <Link onClick={() => setContextBoard(playerBoard)} to="/game">Start Game</Link>}
+                <Link to="/game" onClick={() => {
+                    setContextBoard(playerBoard);
+                    // Clearing out any old data here.
+                    setEnemyBoard(GameBoard(BOARD_SIZE));
+                }}>Start Game</Link>}
         </div>
     );
 }

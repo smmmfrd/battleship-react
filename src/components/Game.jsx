@@ -7,8 +7,8 @@ export default function Game({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
     const {playerBoard, setPlayerBoard, enemyBoard} = useContext(GameContext);
     var numHitsLose = SHIP_LENGTHS.reduce((val, length) => val + length, 0);
 
-    // Wait for enemy board to change
     useEffect(() => {
+        console.log('hey');
         // Make sure it was from a player attack
         if(enemyBoard.board && enemyBoard.board.some(pos => pos > 0)) {
             // Check if player won
