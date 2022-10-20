@@ -5,7 +5,7 @@ import EnemyBoard from "./EnemyBoard";
 import PlayerBoard from "./PlayerBoard";
 
 export default function Game() {
-    const {playerBoard, setPlayerBoard, enemyBoard, shipLengths} = useContext(GameContext);
+    const {playerBoard, setPlayerBoard, enemyBoard, shipLengths, enemyAI} = useContext(GameContext);
     const newGameModal = useRef();
     var numHitsLose = shipLengths.reduce((val, length) => val + length, 0);
     const [endingMessage, setEndingMessage] = useState('');
@@ -24,8 +24,8 @@ export default function Game() {
             if(enemyHits === numHitsLose) {
                 gameOver(true);
             } else {
-                // If not, 
-                perfectEnemyAttack();
+                // If not,
+                enemyAttack();
             }
         }
     }, [enemyBoard]);
@@ -45,6 +45,20 @@ export default function Game() {
         }
     }, [playerBoard])
 
+    function enemyAttack() {
+        switch(enemyAI) {
+            case 'random':
+                randomEnemyAttack();
+                break;
+            case 'semi-random':
+                semiRandomEnemyAttack();
+                break;
+            case 'perfect':
+                perfectEnemyAttack();
+                break;
+        }
+    }
+
     function randomEnemyAttack() {
         var validTargets = playerBoard.board.reduce((array, pos, index) => {
             if(pos === 0) {
@@ -61,6 +75,16 @@ export default function Game() {
             
             return newBoard;
         });
+    }
+
+    //every five attacks it is guaranteed to hit the a player ship.
+    function semiRandomEnemyAttack() {
+        var numAttacks = playerBoard.board.reduce((total, pos) => pos > 0 ? total + 1 : total, 0);
+        if(numAttacks > 0 && (numAttacks + 1) % 5 === 0) {
+            perfectEnemyAttack();
+        } else {
+            randomEnemyAttack();
+        }
     }
 
     function perfectEnemyAttack() {

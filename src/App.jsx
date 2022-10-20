@@ -1,8 +1,9 @@
-import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { GameContextProvider } from "./gameContext";
 
 import PlayerBoardCreator from "./components/PlayerBoardCreator";
 import Game from "./components/Game";
+import GameOptions from "./components/GameOptions";
 
 export default function App() {
   return (
@@ -25,11 +26,6 @@ export default function App() {
   );
 }
 
-function GameOptions() {
-  return (
-    <Link to="/player">Make your Board</Link>
-  );
-}
 
 function Navbar() {
   return (
