@@ -27,7 +27,7 @@ export default function GameOptions() {
                 </label>
             </form>
             <Link to="/player" onClick={() => {
-                // setContextBoardSize(boardSize);
+                setContextBoardSize(boardSize);
                 setContextAI(enemyAI);
             }}>Make your Board</Link>
         </>

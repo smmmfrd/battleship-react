@@ -74,6 +74,28 @@ export default function BoardDisplay({ shipData = [], boardData = [], children,
         return styles;
     }
 
+    function boardElement(){
+        switch(boardSize.toString()) {
+            case "6":
+                console.log(boardSize);
+                return <div className="grid gap-1 grid-cols-6 grid-rows-6">
+                    {boardData.length > 0 && fillGrid()}
+                </div>;
+            case "8":
+                return <div className="grid gap-1 grid-cols-8 grid-rows-8">
+                    {boardData.length > 0 && fillGrid()}
+                </div>;
+            case "10":
+                return <div className="grid gap-1 grid-cols-10 grid-rows-10">
+                    {boardData.length > 0 && fillGrid()}
+                </div>;
+            case "12":
+                return <div className="grid gap-1 grid-cols-12 grid-rows-12">
+                    {boardData.length > 0 && fillGrid()}
+                </div>;
+        }
+    }
+
     const shipElements = shipData.map((ship, index) => {
         var shipName = `${ship.length} ${index}`;
         return <div
@@ -86,9 +108,7 @@ export default function BoardDisplay({ shipData = [], boardData = [], children,
     return (
         <div className="w-max h-max mx-auto mt-4 relative
         border rounded-sm p-1 bg-slate-200 border-slate-200">
-            <div className="grid gap-1 grid-cols-6 grid-rows-6">
-                {boardData.length > 0 && fillGrid()}
-            </div>
+            {boardElement()}
             {shipData.length > 0 && shipElements}
             {children}
         </div>
