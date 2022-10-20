@@ -1,8 +1,13 @@
+import { useContext } from "react";
+import { GameContext } from "../gameContext";
 import GridSquare from "./GridSquare";
 
-export default function BoardDisplay({ boardSize, shipMargin, shipData = [], boardData = [], children,
-    handleSquareClick = () => {}, handleSquareEnter = () => {} }) {
+const shipMargin = 4;
 
+export default function BoardDisplay({ shipData = [], boardData = [], children,
+    handleSquareClick = () => {}, handleSquareEnter = () => {} }) {
+    const {boardSize} = useContext(GameContext);
+    
     function fillGrid() {
         var squares = [];
         for (let i = 0; i < boardSize * boardSize; i++) {

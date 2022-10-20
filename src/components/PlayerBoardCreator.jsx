@@ -4,15 +4,15 @@ import { GameContext } from "../gameContext";
 import BoardDisplay from "./BoardDisplay";
 import GameBoard from "../gameboard";
 
-export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS, boardFinished}) {
+export default function PlayerBoardCreator() {
     var shipLengthIndex = useRef(0);
-    const {setPlayerBoard: setContextBoard, setEnemyBoard} = useContext(GameContext);
+    const {setPlayerBoard: setContextBoard, setEnemyBoard, boardSize, shipLengths} = useContext(GameContext);
 
-    const [playerBoard, setPlayerBoard] = useState(GameBoard(BOARD_SIZE));
+    const [playerBoard, setPlayerBoard] = useState(GameBoard(boardSize));
     const [currentPosition, setCurrentPosition] = useState(0);
     const [shipStats, setShipStats] = useState(
         {
-            length: SHIP_LENGTHS[shipLengthIndex.current], 
+            length: shipLengths[shipLengthIndex.current], 
             vertical: false
         });
     const shipPlacer = useRef();
@@ -47,11 +47,11 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
 
     function handleClick(position) {
         // Escape condition
-        if(shipLengthIndex.current >= SHIP_LENGTHS.length){return;}
+        if(shipLengthIndex.current >= shipLengths.length){return;}
 
         if(playerBoard.goodPosition(position, shipStats.length, shipStats.vertical)){
             // Convert array index (position) to 2D coordinates
-            var [x, y] = [position % BOARD_SIZE, parseInt(position / BOARD_SIZE)];
+            var [x, y] = [position % boardSize, parseInt(position / boardSize)];
             // Update the board
             setPlayerBoard(prevBoard => {
                 var newBoard = {...prevBoard};
@@ -65,8 +65,8 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
             shipLengthIndex.current++;
             
             // Get our next length
-            if(shipLengthIndex.current < SHIP_LENGTHS.length){
-                setShipStats(prevStats => ({...prevStats, length: SHIP_LENGTHS[shipLengthIndex.current]}));
+            if(shipLengthIndex.current < shipLengths.length){
+                setShipStats(prevStats => ({...prevStats, length: shipLengths[shipLengthIndex.current]}));
             } else {
                 // Ships are all placed.
                 shipPlacer.current.style.display = "none";
@@ -76,9 +76,9 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
 
     function handleEnter(position, vertical = shipStats.vertical) {
         // Escape condition
-        if(shipLengthIndex.current >= SHIP_LENGTHS.length){return;}
+        if(shipLengthIndex.current >= shipLengths.length){return;}
 
-        var [x, y] = [position % BOARD_SIZE, parseInt(position / BOARD_SIZE)];
+        var [x, y] = [position % boardSize, parseInt(position / boardSize)];
         x = (x * 44) + 4;
         y = (y * 44) + 4;
         shipPlacer.current.style.left = `${x}px`;
@@ -112,8 +112,6 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
                 Time to Build Your Board!
             </h1>
             <BoardDisplay
-                boardSize={BOARD_SIZE}
-                shipMargin={SHIP_MARGIN}
                 shipData={playerBoard.ships}
                 boardData={playerBoard.board}
                 handleSquareClick={handleClick}
@@ -122,11 +120,11 @@ export default function PlayerBoardCreator({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTH
                 <div ref={shipPlacer} className="border-2
                 absolute pointer-events-none hidden"/>
             </BoardDisplay>
-            {shipLengthIndex.current >= SHIP_LENGTHS.length && 
+            {shipLengthIndex.current >= shipLengths.length && 
                 <Link to="/game" onClick={() => {
                     setContextBoard(playerBoard);
                     // Clearing out any old data here.
-                    setEnemyBoard(GameBoard(BOARD_SIZE));
+                    setEnemyBoard(GameBoard(boardSize));
                 }}>Start Game</Link>}
         </div>
     );

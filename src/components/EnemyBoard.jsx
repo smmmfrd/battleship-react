@@ -5,15 +5,15 @@ import GameBoard from "../gameboard";
 
 import BoardDisplay from "./BoardDisplay";
 
-export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS }) {
-    const {enemyBoard, setEnemyBoard} = useContext(GameContext);
+export default function EnemyBoard() {
+    const {enemyBoard, setEnemyBoard, boardSize, shipLengths} = useContext(GameContext);
 
     // TEMP - placing ships on a static board
     useEffect(() => {
         setEnemyBoard(() => {
-            var newBoard = GameBoard(BOARD_SIZE);
+            var newBoard = GameBoard(boardSize);
             buildEnemyBoard(newBoard);
-            while(newBoard.ships.length !== SHIP_LENGTHS.length) {
+            while(newBoard.ships.length !== shipLengths.length) {
                 buildEnemyBoard(newBoard);
             }
             return newBoard;
@@ -48,17 +48,17 @@ export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS }) {
 
     function buildEnemyBoard(board) {
         var placements = [];
-        for (let i = 0; i < BOARD_SIZE; i++) {
+        for (let i = 0; i < boardSize; i++) {
             placements.push({x: i, y: i});
         }
         shuffle(placements);
 
-        var shipLengths = [...SHIP_LENGTHS];
-        shipLengths.reverse().forEach(length => {
+        var lengths = [...shipLengths];
+        lengths.reverse().forEach(length => {
             for(let i = 0; i < placements.length; i++){
                 var placed = false;
                 var pos = placements[i];
-                var position = pos.x + (pos.y * BOARD_SIZE);
+                var position = pos.x + (pos.y * boardSize);
                 var vert = Math.random() < 0.5;
                 if (board.goodPosition(position, length, vert)) {
                     board.addShip(pos.x, pos.y, length, vert);
@@ -87,8 +87,6 @@ export default function EnemyBoard({ BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS }) {
     return (
         <div className="enemy-board">
             <BoardDisplay
-                boardSize={BOARD_SIZE}
-                shipMargin={SHIP_MARGIN}
                 shipData={enemyBoard.ships}
                 boardData={enemyBoard.board}
                 handleSquareClick={handleSquareClick}

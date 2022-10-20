@@ -4,10 +4,10 @@ import { GameContext } from "../gameContext";
 import EnemyBoard from "./EnemyBoard";
 import PlayerBoard from "./PlayerBoard";
 
-export default function Game({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
-    const {playerBoard, setPlayerBoard, enemyBoard} = useContext(GameContext);
+export default function Game() {
+    const {playerBoard, setPlayerBoard, enemyBoard, shipLengths} = useContext(GameContext);
     const newGameModal = useRef();
-    var numHitsLose = SHIP_LENGTHS.reduce((val, length) => val + length, 0);
+    var numHitsLose = shipLengths.reduce((val, length) => val + length, 0);
     const [endingMessage, setEndingMessage] = useState('');
 
     useEffect(() => {
@@ -99,13 +99,9 @@ export default function Game({BOARD_SIZE, SHIP_MARGIN, SHIP_LENGTHS}) {
             </dialog>
             <h1 className="text-3xl font-bold underline">Time to Battle Ship!</h1>
             <EnemyBoard
-                BOARD_SIZE={BOARD_SIZE}
-                SHIP_MARGIN={SHIP_MARGIN}
-                SHIP_LENGTHS={SHIP_LENGTHS}
+                SHIP_LENGTHS={shipLengths}
             />
             <PlayerBoard 
-                BOARD_SIZE={BOARD_SIZE}
-                SHIP_MARGIN={SHIP_MARGIN}
                 playerBoard={playerBoard}
             />
         </>
