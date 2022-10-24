@@ -6,22 +6,22 @@ import GameBoard from "../gameboard";
 
 export default function PlayerBoardCreator() {
     var shipLengthIndex = useRef(0);
-    const {setPlayerBoard: setContextBoard, setEnemyBoard, boardSize, shipLengths} = useContext(GameContext);
+    const { setPlayerBoard: setContextBoard, setEnemyBoard, boardSize, shipLengths } = useContext(GameContext);
 
     const [playerBoard, setPlayerBoard] = useState(GameBoard(boardSize));
     const [currentPosition, setCurrentPosition] = useState(0);
     const [shipStats, setShipStats] = useState(
         {
-            length: shipLengths[shipLengthIndex.current], 
+            length: shipLengths[shipLengthIndex.current],
             vertical: false
         });
     const shipPlacer = useRef();
 
     const handleKeyPress = useCallback(event => {
         // If the player pressed "R"
-        if(event.keyCode === 82) {
+        if (event.keyCode === 82) {
             var vertical = !shipStats.vertical
-            setShipStats(prevShip => ({...prevShip, vertical: vertical}));
+            setShipStats(prevShip => ({ ...prevShip, vertical: vertical }));
             handleEnter(currentPosition, vertical);
         }
     }, [shipStats, currentPosition]);
@@ -47,14 +47,14 @@ export default function PlayerBoardCreator() {
 
     function handleClick(position) {
         // Escape condition
-        if(shipLengthIndex.current >= shipLengths.length){return;}
+        if (shipLengthIndex.current >= shipLengths.length) { return; }
 
-        if(playerBoard.goodPosition(position, shipStats.length, shipStats.vertical)){
+        if (playerBoard.goodPosition(position, shipStats.length, shipStats.vertical)) {
             // Convert array index (position) to 2D coordinates
             var [x, y] = [position % boardSize, parseInt(position / boardSize)];
             // Update the board
             setPlayerBoard(prevBoard => {
-                var newBoard = {...prevBoard};
+                var newBoard = { ...prevBoard };
                 newBoard.addShip(x, y, shipStats.length, shipStats.vertical);
                 return newBoard;
             });
@@ -63,10 +63,10 @@ export default function PlayerBoardCreator() {
 
             // Go to the next index
             shipLengthIndex.current++;
-            
+
             // Get our next length
-            if(shipLengthIndex.current < shipLengths.length){
-                setShipStats(prevStats => ({...prevStats, length: shipLengths[shipLengthIndex.current]}));
+            if (shipLengthIndex.current < shipLengths.length) {
+                setShipStats(prevStats => ({ ...prevStats, length: shipLengths[shipLengthIndex.current] }));
             } else {
                 // Ships are all placed.
                 shipPlacer.current.style.display = "none";
@@ -76,7 +76,7 @@ export default function PlayerBoardCreator() {
 
     function handleEnter(position, vertical = shipStats.vertical) {
         // Escape condition
-        if(shipLengthIndex.current >= shipLengths.length){return;}
+        if (shipLengthIndex.current >= shipLengths.length) { return; }
 
         var [x, y] = [position % boardSize, parseInt(position / boardSize)];
         x = (x * 44) + 4;
@@ -91,7 +91,7 @@ export default function PlayerBoardCreator() {
     }
 
     function shipPlacerValidPosition(valid) {
-        if(valid) {
+        if (valid) {
             shipPlacer.current.classList.add("bg-gray-500");
             shipPlacer.current.classList.add("border-gray-800");
             shipPlacer.current.classList.remove("bg-red-500");
@@ -103,6 +103,16 @@ export default function PlayerBoardCreator() {
             shipPlacer.current.style.opacity = "50%";
             shipPlacer.current.classList.remove("bg-gray-500");
             shipPlacer.current.classList.remove("border-gray-800");
+        }
+    }
+
+    function getShipName(index) {
+        switch (index) {
+            case 0: return "Destroyer";
+            case 1: return "Submarine";
+            case 2: return "Cruiser";
+            case 3: return "Battleship";
+            case 4: return "Carrier";
         }
     }
 
@@ -125,15 +135,20 @@ export default function PlayerBoardCreator() {
                 <div ref={shipPlacer} className="border-2
                 absolute pointer-events-none hidden"/>
             </BoardDisplay>
-            <p>Current Ship:</p>
-            {shipLengthIndex.current >= shipLengths.length &&
-            <div className="bg-blue-600 text-neutral-50 w-max px-2 py-1 rounded-xl mx-auto text-center hover:underline">
+            {shipLengthIndex.current >= shipLengths.length ?
+                <div className="mt-4 mx-auto bg-blue-600 text-neutral-50 w-max px-2 py-1 rounded-xl text-center hover:underline">
                     <Link to="/game" onClick={() => {
                         setContextBoard(playerBoard);
                         // Clearing out any old data here.
-                        setEnemyBoard(GameBoard(boardSize));}}>
+                        setEnemyBoard(GameBoard(boardSize));
+                    }}>
                         Start Game</Link>
-            </div>}
+                </div>
+                :
+                <p>
+                    Current Ship: {getShipName(shipLengthIndex.current)} ({shipLengths[shipLengthIndex.current]})
+                </p>
+            }
         </>
     );
 }
