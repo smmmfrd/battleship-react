@@ -23,6 +23,7 @@ export default function Game() {
                     return hits + 1;
                 }
             }, 0);
+            setEnemyTurn(true);
             const enemyResponse = setTimeout(() => {
                 if(enemyHits === numHitsLose) {
                     gameOver(true);
@@ -80,7 +81,7 @@ export default function Game() {
         // Update the player's board
         setPlayerBoard(prevBoard => {
             var newBoard = {...prevBoard};
-            newBoard.attacked(validTargets[Math.floor(Math.random() * validTargets.length)]);
+            newBoard.attacked(validTargets[Math.floor(Math.random() * validTargets.length)], playerShotUpdate);
             
             return newBoard;
         });
@@ -108,27 +109,18 @@ export default function Game() {
         // Update the player's board
         setPlayerBoard(prevBoard => {
             var newBoard = {...prevBoard};
-            newBoard.attacked(validTargets[Math.floor(Math.random() * validTargets.length)]);
+            newBoard.attacked(validTargets[Math.floor(Math.random() * validTargets.length)], playerShotUpdate);
 
             return newBoard;
         });
     }
 
     function enemyShotUpdate(hit) {
-        var message = "You fired at the enemy!";
-        setEnemyTurn(true);
-        
-        if(hit) {
-            setGameState(prevState => {
-                // console.log(' HIT!');
-                return message + ' HIT!';
-            });
-        } else {
-            setGameState(prevState => {
-                // console.log(' MISS!');
-                return message + ' MISS!';
-            });
-        }
+        setGameState('You fired at the enemy!' + (hit ? ' HIT!' : ' MISS!'));
+    }
+
+    function playerShotUpdate(hit) {
+        setGameState('The enemy fired at you!' + (hit ? ' HIT!' : ' MISS!'));
     }
 
     function gameOver(playerWon) {
