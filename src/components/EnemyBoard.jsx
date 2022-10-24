@@ -85,12 +85,12 @@ export default function EnemyBoard() {
     }
 
     return (
-        <div className="enemy-board">
-            <BoardDisplay
-                shipData={enemyBoard.ships}
-                boardData={enemyBoard.board}
-                handleSquareClick={handleSquareClick}
-            />
-        </div>
+        <BoardDisplay
+            shipData={enemyBoard.ships}
+            boardData={enemyBoard.board}
+            handleSquareClick={handleSquareClick}
+        >
+            <h3 className="text-2xl text-center">Enemy Waters</h3>
+        </BoardDisplay>
     );
 }

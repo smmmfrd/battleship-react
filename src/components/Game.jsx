@@ -116,18 +116,28 @@ export default function Game() {
 
     return (
         <>
-            <dialog ref={newGameModal}>
-                <h2>Game Over!</h2>
-                <p>{endingMessage}</p>
-                <Link to="/">Restart</Link>
+            <dialog ref={newGameModal} className="mt-32">
+                <div className="flex flex-col text-center gap-6">
+                    <h2 className="text-4xl underline">{endingMessage}</h2>
+                    <div className="bg-blue-600 text-neutral-50 w-max px-2 py-1 rounded-xl mx-auto text-center hover:underline">
+                        <Link to="/">Restart</Link>
+                    </div>
+                </div>
             </dialog>
-            <h1 className="text-3xl font-bold underline">Time to Battle Ship!</h1>
-            <EnemyBoard
-                SHIP_LENGTHS={shipLengths}
-            />
-            <PlayerBoard 
-                playerBoard={playerBoard}
-            />
+            <h1 className="text-3xl font-bold underline text-center">Time to Battle Ship!</h1>
+            <main>
+                <p className="text-center">
+                    Game Status
+                </p>
+                <div className="w-full flex justify-evenly md:flex-row flex-col">
+                    <EnemyBoard
+                        SHIP_LENGTHS={shipLengths}
+                    />
+                    <PlayerBoard
+                        playerBoard={playerBoard}
+                    />
+                </div>
+            </main>
         </>
     );
 }

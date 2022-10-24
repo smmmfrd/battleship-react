@@ -9,7 +9,7 @@ export default function GameOptions() {
 
     return (
         <main className="w-max mx-auto bg-blue-100 mt-8 p-8 rounded-xl
-            flex flex-col gap-8">
+        flex flex-col gap-8">
             <form className="grid grid-cols-2 gap-x-1 gap-y-4">
                 <label htmlFor="size" className="text-right border-2">Board Size:</label>
                 <select id="size" value={boardSize} onChange={(e) => setBoardSize(e.target.value)}
@@ -29,7 +29,8 @@ export default function GameOptions() {
             </form>
             <Link to="/player" onClick={() => {
                 setContextBoardSize(boardSize);
-                setContextAI(enemyAI);}}
+                setContextAI(enemyAI);
+            }}
                 className="py-2 text-center bg-blue-300 hover:underline rounded-md">
                 Make your Board</Link>
         </main>

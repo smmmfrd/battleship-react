@@ -125,13 +125,15 @@ export default function PlayerBoardCreator() {
                 <div ref={shipPlacer} className="border-2
                 absolute pointer-events-none hidden"/>
             </BoardDisplay>
-            {shipLengthIndex.current >= shipLengths.length && 
-                <Link to="/game" onClick={() => {
-                    setContextBoard(playerBoard);
-                    // Clearing out any old data here.
-                    setEnemyBoard(GameBoard(boardSize));
-                }}>Start Game</Link>}
             <p>Current Ship:</p>
+            {shipLengthIndex.current >= shipLengths.length &&
+            <div className="bg-blue-600 text-neutral-50 w-max px-2 py-1 rounded-xl mx-auto text-center hover:underline">
+                    <Link to="/game" onClick={() => {
+                        setContextBoard(playerBoard);
+                        // Clearing out any old data here.
+                        setEnemyBoard(GameBoard(boardSize));}}>
+                        Start Game</Link>
+            </div>}
         </>
     );
 }

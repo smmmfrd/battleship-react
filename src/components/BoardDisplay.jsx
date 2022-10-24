@@ -77,7 +77,6 @@ export default function BoardDisplay({ shipData = [], boardData = [], children,
     function boardElement(){
         switch(boardSize.toString()) {
             case "6":
-                console.log(boardSize);
                 return <div className="grid gap-1 grid-cols-6 grid-rows-6">
                     {boardData.length > 0 && fillGrid()}
                 </div>;
