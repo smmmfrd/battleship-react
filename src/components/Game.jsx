@@ -9,9 +9,11 @@ export default function Game() {
     const newGameModal = useRef();
     var numHitsLose = shipLengths.reduce((val, length) => val + length, 0);
     const [endingMessage, setEndingMessage] = useState('');
+    const [gameState, setGameState] = useState('You go first! Click on a square to fire at the enemy!');
+    const [enemyTurn, setEnemyTurn] = useState(false);
 
     useEffect(() => {
-        // Make sure it was from a player attack
+        // Make sure the change was not from set up
         if(enemyBoard.board && enemyBoard.board.some(pos => pos > 0)) {
             // Check if player won
             var enemyHits = enemyBoard.board.reduce((hits, current) => {
@@ -21,12 +23,19 @@ export default function Game() {
                     return hits + 1;
                 }
             }, 0);
-            if(enemyHits === numHitsLose) {
-                gameOver(true);
-            } else {
-                // If not,
-                enemyAttack();
-            }
+            const enemyResponse = setTimeout(() => {
+                if(enemyHits === numHitsLose) {
+                    gameOver(true);
+                    // setGameState("All enemy ships are down!!!");
+                } else {
+                    // If not,
+                    enemyAttack();
+                    // setGameState("The enemy fired upon you!");
+                }
+                setEnemyTurn(false);
+            }, 500);
+
+            return () => clearTimeout(enemyResponse);
         }
     }, [enemyBoard]);
 
@@ -105,6 +114,23 @@ export default function Game() {
         });
     }
 
+    function enemyShotUpdate(hit) {
+        var message = "You fired at the enemy!";
+        setEnemyTurn(true);
+        
+        if(hit) {
+            setGameState(prevState => {
+                // console.log(' HIT!');
+                return message + ' HIT!';
+            });
+        } else {
+            setGameState(prevState => {
+                // console.log(' MISS!');
+                return message + ' MISS!';
+            });
+        }
+    }
+
     function gameOver(playerWon) {
         setEndingMessage(playerWon ? "You won!" : "You lost!");
 
@@ -126,12 +152,11 @@ export default function Game() {
             </dialog>
             <h1 className="text-3xl font-bold underline text-center">Time to Battle Ship!</h1>
             <main>
-                <p className="text-center">
-                    Game Status
-                </p>
+                <p className="text-center">{gameState}</p>
                 <div className="w-full flex justify-evenly md:flex-row flex-col">
                     <EnemyBoard
-                        SHIP_LENGTHS={shipLengths}
+                        onHit={enemyShotUpdate}
+                        invincible={enemyTurn}
                     />
                     <PlayerBoard
                         playerBoard={playerBoard}

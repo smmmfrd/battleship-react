@@ -5,7 +5,7 @@ import GameBoard from "../gameboard";
 
 import BoardDisplay from "./BoardDisplay";
 
-export default function EnemyBoard() {
+export default function EnemyBoard({onHit, invincible}) {
     const {enemyBoard, setEnemyBoard, boardSize, shipLengths} = useContext(GameContext);
 
     // TEMP - placing ships on a static board
@@ -77,9 +77,12 @@ export default function EnemyBoard() {
     }
 
     function handleSquareClick(position) {
+        if(invincible) {
+            return;
+        }
         setEnemyBoard(prevBoard => {
-            var newBoard = { ...prevBoard }
-            newBoard.attacked(position);
+            var newBoard = { ...prevBoard };
+            newBoard.attacked(position, onHit);
             return newBoard;
         });
     }

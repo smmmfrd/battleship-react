@@ -48,8 +48,10 @@ export default function GameBoard(boardSize){
         }
     }
 
-    function attacked(position) {
-        board[position] = shipLocations.includes(position) ? BoardState.HIT : BoardState.MISS;
+    function attacked(position, onHit = () => {}) {
+        var hit = shipLocations.includes(position);
+        board[position] = hit ? BoardState.HIT : BoardState.MISS;
+        onHit(hit);
     }
 
     return {

@@ -145,7 +145,7 @@ export default function PlayerBoardCreator() {
                         Start Game</Link>
                 </div>
                 :
-                <p>
+                <p className="text-center">
                     Current Ship: {getShipName(shipLengthIndex.current)} ({shipLengths[shipLengthIndex.current]})
                 </p>
             }
