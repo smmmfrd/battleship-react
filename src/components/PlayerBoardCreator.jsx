@@ -107,10 +107,15 @@ export default function PlayerBoardCreator() {
     }
 
     return (
-        <div className="player-board">
-            <h1 className="text-3xl font-bold underline">
-                Time to Build Your Board!
-            </h1>
+        <>
+            <header className="text-center">
+                <h1 className="text-3xl font-bold underline">
+                    Build Your Board!
+                </h1>
+                <p className="text-sm text-neutral-700">
+                    (Press R to rotate)
+                </p>
+            </header>
             <BoardDisplay
                 shipData={playerBoard.ships}
                 boardData={playerBoard.board}
@@ -126,6 +131,7 @@ export default function PlayerBoardCreator() {
                     // Clearing out any old data here.
                     setEnemyBoard(GameBoard(boardSize));
                 }}>Start Game</Link>}
-        </div>
+            <p>Current Ship:</p>
+        </>
     );
 }
