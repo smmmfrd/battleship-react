@@ -5,9 +5,7 @@ import GameBoard from "../gameboard";
 
 import BoardDisplay from "./BoardDisplay";
 
-const VISIBLE_SHIPS = false;
-
-export default function EnemyBoard({onHit, invincible}) {
+export default function EnemyBoard({onHit, invincible, gameOver}) {
     const {enemyBoard, setEnemyBoard, boardSize, shipLengths} = useContext(GameContext);
 
     // TEMP - placing ships on a static board
@@ -93,7 +91,7 @@ export default function EnemyBoard({onHit, invincible}) {
         <BoardDisplay
             shipData={enemyBoard.ships}
             boardData={enemyBoard.board}
-            displayShips={VISIBLE_SHIPS}
+            displayShips={gameOver}
             handleSquareClick={handleSquareClick}
         >
             <h3 className="text-2xl text-center">Enemy Waters</h3>

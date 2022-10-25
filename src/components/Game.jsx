@@ -9,7 +9,7 @@ export default function Game() {
     const newGameModal = useRef();
     var numHitsLose = shipLengths.reduce((val, length) => val + length, 0);
     const [endingMessage, setEndingMessage] = useState('');
-
+    const [displayEnemyShips, setDisplayEnemyShips] = useState(false);
     const [enemyTurn, setEnemyTurn] = useState(false);
     const [gameState, setGameState] = useState({
         message: 'You go first! Click on a square to fire at the enemy!',
@@ -35,7 +35,7 @@ export default function Game() {
                     // If not,
                     enemyAttack();
                 }
-            }, 1000);
+            }, 2000);
 
             return () => clearTimeout(enemyResponse);
         }
@@ -69,7 +69,7 @@ export default function Game() {
                 if(enemy) {
                     setEnemyTurn(false);
                 }
-            }, 500);
+            }, 1000);
             
             return () => clearTimeout(gameStateUpdate);
         }
@@ -151,8 +151,10 @@ export default function Game() {
         });
     }
 
-    function gameOver(playerWon) {
-        setEndingMessage(playerWon ? "You won!" : "You lost!");
+    async function gameOver(playerWon) {
+        setDisplayEnemyShips(true);
+        await new Promise(res => setTimeout(res, 2000));
+        setEndingMessage(playerWon ? "You sunk all the enemy ships!" : "All your ships were sunk!");
 
         newGameModal.current.addEventListener('cancel', (event) => {
             event.preventDefault();
@@ -171,12 +173,13 @@ export default function Game() {
                 </div>
             </dialog>
             <h1 className="text-3xl font-bold underline text-center">Time to Battle Ship!</h1>
-            <main>
-                <p className="text-center">{gameState.message}</p>
+            <main className="max-w-4xl mx-auto">
+                <p className="bg-blue-900 text-yellow-300 font-mono w-3/4 mx-auto p-2">{gameState.message}</p>
                 <div className="w-full flex justify-evenly md:flex-row flex-col">
                     <EnemyBoard
                         onHit={playerShotUpdate}
                         invincible={enemyTurn}
+                        gameOver={displayEnemyShips}
                     />
                     <PlayerBoard
                         playerBoard={playerBoard}
