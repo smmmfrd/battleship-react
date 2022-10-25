@@ -9,8 +9,12 @@ export default function Game() {
     const newGameModal = useRef();
     var numHitsLose = shipLengths.reduce((val, length) => val + length, 0);
     const [endingMessage, setEndingMessage] = useState('');
-    const [gameState, setGameState] = useState('You go first! Click on a square to fire at the enemy!');
+
     const [enemyTurn, setEnemyTurn] = useState(false);
+    const [gameState, setGameState] = useState({
+        message: 'You go first! Click on a square to fire at the enemy!',
+        goodHit: false
+    });
 
     useEffect(() => {
         // Make sure the change was not from set up
@@ -27,14 +31,11 @@ export default function Game() {
             const enemyResponse = setTimeout(() => {
                 if(enemyHits === numHitsLose) {
                     gameOver(true);
-                    // setGameState("All enemy ships are down!!!");
                 } else {
                     // If not,
                     enemyAttack();
-                    // setGameState("The enemy fired upon you!");
                 }
-                setEnemyTurn(false);
-            }, 500);
+            }, 1000);
 
             return () => clearTimeout(enemyResponse);
         }
@@ -53,7 +54,26 @@ export default function Game() {
         if(playerHits === numHitsLose) {
             gameOver(false);
         }
-    }, [playerBoard])
+    }, [playerBoard]);
+
+    useEffect(() => {
+        if(gameState.message === 'You fired at the enemy!' || gameState.message === 'The enemy fired at you!') {
+            var enemy = gameState.message === 'The enemy fired at you!';
+            const gameStateUpdate = setTimeout(() => {
+                setGameState(prevState => {
+                    return {
+                        message: prevState.message + (prevState.goodHit ? ' HIT!' : ' MISS!'),
+                        goodHit: prevState.goodHit
+                    }
+                });
+                if(enemy) {
+                    setEnemyTurn(false);
+                }
+            }, 500);
+            
+            return () => clearTimeout(gameStateUpdate);
+        }
+    }, [gameState]);
 
     function enemyAttack() {
         switch(enemyAI) {
@@ -81,7 +101,7 @@ export default function Game() {
         // Update the player's board
         setPlayerBoard(prevBoard => {
             var newBoard = {...prevBoard};
-            newBoard.attacked(validTargets[Math.floor(Math.random() * validTargets.length)], playerShotUpdate);
+            newBoard.attacked(validTargets[Math.floor(Math.random() * validTargets.length)], enemyShotUpdate);
             
             return newBoard;
         });
@@ -109,18 +129,24 @@ export default function Game() {
         // Update the player's board
         setPlayerBoard(prevBoard => {
             var newBoard = {...prevBoard};
-            newBoard.attacked(validTargets[Math.floor(Math.random() * validTargets.length)], playerShotUpdate);
+            newBoard.attacked(validTargets[Math.floor(Math.random() * validTargets.length)], enemyShotUpdate);
 
             return newBoard;
         });
     }
 
-    function enemyShotUpdate(hit) {
-        setGameState('You fired at the enemy!' + (hit ? ' HIT!' : ' MISS!'));
+    function playerShotUpdate(hit) {
+        setGameState({ 
+            message: 'You fired at the enemy!',
+            goodHit: hit
+        });
     }
 
-    function playerShotUpdate(hit) {
-        setGameState('The enemy fired at you!' + (hit ? ' HIT!' : ' MISS!'));
+    function enemyShotUpdate(hit) {
+        setGameState({ 
+            message: 'The enemy fired at you!',
+            goodHit: hit
+        });
     }
 
     function gameOver(playerWon) {
@@ -144,10 +170,10 @@ export default function Game() {
             </dialog>
             <h1 className="text-3xl font-bold underline text-center">Time to Battle Ship!</h1>
             <main>
-                <p className="text-center">{gameState}</p>
+                <p className="text-center">{gameState.message}</p>
                 <div className="w-full flex justify-evenly md:flex-row flex-col">
                     <EnemyBoard
-                        onHit={enemyShotUpdate}
+                        onHit={playerShotUpdate}
                         invincible={enemyTurn}
                     />
                     <PlayerBoard

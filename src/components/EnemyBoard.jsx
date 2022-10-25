@@ -5,6 +5,8 @@ import GameBoard from "../gameboard";
 
 import BoardDisplay from "./BoardDisplay";
 
+const VISIBLE_SHIPS = false;
+
 export default function EnemyBoard({onHit, invincible}) {
     const {enemyBoard, setEnemyBoard, boardSize, shipLengths} = useContext(GameContext);
 
@@ -91,6 +93,7 @@ export default function EnemyBoard({onHit, invincible}) {
         <BoardDisplay
             shipData={enemyBoard.ships}
             boardData={enemyBoard.board}
+            displayShips={VISIBLE_SHIPS}
             handleSquareClick={handleSquareClick}
         >
             <h3 className="text-2xl text-center">Enemy Waters</h3>
