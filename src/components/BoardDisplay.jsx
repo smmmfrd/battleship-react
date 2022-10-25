@@ -24,7 +24,7 @@ export default function BoardDisplay({ shipData = [], boardData = [], children, 
                     squares.push(
                         <div 
                         key={`${i} ${boardData[i]}`}
-                        className="w-8 h-8 m-1 bg-slate-200 rounded-full absolute z-10"
+                        className="w-8 h-8 m-1 bg-slate-200 rounded-full absolute z-10 animate-fadeIn"
                         style={placeMarker(i)}
                         />
                     );
@@ -33,7 +33,7 @@ export default function BoardDisplay({ shipData = [], boardData = [], children, 
                     squares.push(
                         <div 
                         key={`${i} ${boardData[i]}`}
-                        className="w-8 h-8 m-1 bg-red-600 rounded-full absolute z-10"
+                        className="w-8 h-8 m-1 bg-red-600 rounded-full absolute z-10 animate-fadeIn"
                         style={placeMarker(i)}
                         />
                     );

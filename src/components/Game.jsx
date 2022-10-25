@@ -135,14 +135,16 @@ export default function Game() {
         });
     }
 
-    function playerShotUpdate(hit) {
+    async function playerShotUpdate(hit) {
+        await new Promise(res => setTimeout(res, 50));
         setGameState({ 
             message: 'You fired at the enemy!',
             goodHit: hit
         });
     }
-
-    function enemyShotUpdate(hit) {
+    
+    async function enemyShotUpdate(hit) {
+        await new Promise(res => setTimeout(res, 50));
         setGameState({ 
             message: 'The enemy fired at you!',
             goodHit: hit
