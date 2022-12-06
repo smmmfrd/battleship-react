@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GameContext } from "../gameContext";
 import EnemyBoard from "./EnemyBoard";
 import PlayerBoard from "./PlayerBoard";
@@ -15,6 +15,14 @@ export default function Game() {
         message: 'You go first! Click on a square to fire at the enemy!',
         goodHit: false
     });
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!playerBoard.board) {
+            navigate('/');
+        }
+    }, [])
 
     useEffect(() => {
         // Make sure the change was not from set up
@@ -42,6 +50,10 @@ export default function Game() {
     }, [enemyBoard]);
 
     useEffect(() => {
+        if(!playerBoard.board) {
+            return;
+        }
+
         var playerHits = playerBoard.board.reduce((hits, current) => {
             if(current != 2) {
                 return hits;
