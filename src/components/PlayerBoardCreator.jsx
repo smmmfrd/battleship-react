@@ -126,29 +126,30 @@ export default function PlayerBoardCreator() {
                     (Press R to rotate)
                 </p>
             </header>
-            <BoardDisplay
-                shipData={playerBoard.ships}
-                boardData={playerBoard.board}
-                handleSquareClick={handleClick}
-                handleSquareEnter={handleEnter}
-            >
-                <div ref={shipPlacer} className="border-2
-                absolute pointer-events-none hidden"/>
-            </BoardDisplay>
-            {shipLengthIndex.current >= shipLengths.length ?
-                <div className="mt-4 mx-auto bg-blue-600 text-neutral-50 w-max px-2 py-1 rounded-xl text-center hover:underline">
-                    <Link to="/game" onClick={() => {
+            <main>
+                {shipLengthIndex.current >= shipLengths.length ?
+                    <Link to="/game" className="block mt-4 mx-auto bg-blue-600 text-neutral-50 w-max px-2 py-1 rounded-xl text-center hover:underline" onClick={() => {
                         setContextBoard(playerBoard);
                         // Clearing out any old data here.
                         setEnemyBoard(GameBoard(boardSize));
                     }}>
-                        Start Game</Link>
-                </div>
-                :
-                <p className="text-center">
-                    Current Ship: {getShipName(shipLengthIndex.current)} ({shipLengths[shipLengthIndex.current]})
-                </p>
-            }
+                        Start Game
+                    </Link>
+                    :
+                    <p className="text-center">
+                        Current Ship: {getShipName(shipLengthIndex.current)} ({shipLengths[shipLengthIndex.current]})
+                    </p>
+                }
+                <BoardDisplay
+                    shipData={playerBoard.ships}
+                    boardData={playerBoard.board}
+                    handleSquareClick={handleClick}
+                    handleSquareEnter={handleEnter}
+                >
+                    <div ref={shipPlacer} className="border-2
+                    absolute pointer-events-none hidden"/>
+                </BoardDisplay>
+            </main>
         </>
     );
 }

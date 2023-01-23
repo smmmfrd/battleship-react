@@ -5,16 +5,16 @@ import GridSquare from "./GridSquare";
 const shipMargin = 4;
 
 export default function BoardDisplay({ shipData = [], boardData = [], children, displayShips = true,
-    handleSquareClick = () => {}, handleSquareEnter = () => {} }) {
-    const {boardSize} = useContext(GameContext);
-    
+    handleSquareClick = () => { }, handleSquareEnter = () => { } }) {
+    const { boardSize } = useContext(GameContext);
+
     function fillGrid() {
         var squares = [];
         for (let i = 0; i < boardSize * boardSize; i++) {
-            
+
             squares.push(
                 <GridSquare key={i} position={i}
-                    handleClick={boardData[i] > 0 ? () => {} : handleSquareClick }
+                    handleClick={boardData[i] > 0 ? () => { } : handleSquareClick}
                     handleEnter={handleSquareEnter} />
             );
             switch (boardData[i]) {
@@ -22,19 +22,19 @@ export default function BoardDisplay({ shipData = [], boardData = [], children, 
                     break;
                 case 1:
                     squares.push(
-                        <div 
-                        key={`${i} ${boardData[i]}`}
-                        className="w-8 h-8 m-1 bg-slate-200 rounded-full absolute z-10 animate-fadeIn"
-                        style={placeMarker(i)}
+                        <div
+                            key={`${i} ${boardData[i]}`}
+                            className="w-8 h-8 m-1 bg-slate-200 rounded-full absolute z-10 animate-fadeIn"
+                            style={placeMarker(i)}
                         />
                     );
                     break;
                 case 2:
                     squares.push(
-                        <div 
-                        key={`${i} ${boardData[i]}`}
-                        className="w-8 h-8 m-1 bg-red-600 rounded-full absolute z-10 animate-fadeIn"
-                        style={placeMarker(i)}
+                        <div
+                            key={`${i} ${boardData[i]}`}
+                            className="w-8 h-8 m-1 bg-red-600 rounded-full absolute z-10 animate-fadeIn"
+                            style={placeMarker(i)}
                         />
                     );
                     break;
@@ -46,7 +46,7 @@ export default function BoardDisplay({ shipData = [], boardData = [], children, 
         return squares;
     }
 
-    function placeShip({x, y, length, vertical}) {
+    function placeShip({ x, y, length, vertical }) {
         var styles = {};
 
         const longSideLength = () => {
@@ -74,8 +74,8 @@ export default function BoardDisplay({ shipData = [], boardData = [], children, 
         return styles;
     }
 
-    function boardElement(){
-        switch(boardSize.toString()) {
+    function boardElement() {
+        switch (boardSize.toString()) {
             case "6":
                 return <div className="grid gap-1 grid-cols-6 grid-rows-6">
                     {boardData.length > 0 && fillGrid()}
@@ -89,7 +89,7 @@ export default function BoardDisplay({ shipData = [], boardData = [], children, 
                     {boardData.length > 0 && fillGrid()}
                 </div>;
             case "12":
-                return <div className="grid gap-1 grid-cols-12 grid-rows-12">
+                return <div className="w-[524px] grid gap-1 grid-cols-12 grid-rows-12">
                     {boardData.length > 0 && fillGrid()}
                 </div>;
         }
@@ -99,13 +99,13 @@ export default function BoardDisplay({ shipData = [], boardData = [], children, 
         var shipName = `${ship.length} ${index}`;
         return <div
             key={shipName}
-            className='absolute bg-slate-500 rounded-3xl pointer-events-none' 
+            className='absolute bg-slate-500 rounded-3xl pointer-events-none'
             style={placeShip(ship)}
         />
     });
 
     return (
-        <div className="w-max h-max mx-auto mt-4 relative
+        <div className="mx-auto mt-4 relative
         border rounded-sm p-1 bg-slate-200 border-slate-200">
             {boardElement()}
             {shipData.length > 0 && displayShips && shipElements}
@@ -113,5 +113,3 @@ export default function BoardDisplay({ shipData = [], boardData = [], children, 
         </div>
     );
 }
-
-BoardDisplay.default

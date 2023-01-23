@@ -184,10 +184,12 @@ export default function Game() {
                     </div>
                 </div>
             </dialog>
-            <h1 className="text-3xl font-bold underline text-center">Time to Battle Ship!</h1>
-            <main className="max-w-4xl mx-auto">
+            <header className="mb-4">
+                <h1 className="text-3xl font-bold underline text-center">Time to Battle Ship!</h1>
+            </header>
+            <main className="w-full mx-auto">
                 <p className="bg-blue-900 text-yellow-300 font-mono w-3/4 mx-auto p-2">{gameState.message}</p>
-                <div className="w-full flex justify-evenly md:flex-row flex-col">
+                <div className="w-full flex justify-between lg:flex-row flex-col">
                     <EnemyBoard
                         onHit={playerShotUpdate}
                         invincible={enemyTurn}
