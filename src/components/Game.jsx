@@ -189,7 +189,7 @@ export default function Game() {
             </header>
             <main className="w-full mx-auto">
                 <p className="bg-blue-900 text-yellow-300 font-mono w-3/4 mx-auto p-2">{gameState.message}</p>
-                <div className="w-full flex justify-between lg:flex-row flex-col">
+                <div className="w-full flex justify-around lg:flex-row flex-col">
                     <EnemyBoard
                         onHit={playerShotUpdate}
                         invincible={enemyTurn}

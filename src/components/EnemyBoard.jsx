@@ -93,8 +93,7 @@ export default function EnemyBoard({onHit, invincible, gameOver}) {
             boardData={enemyBoard.board}
             displayShips={gameOver}
             handleSquareClick={handleSquareClick}
-        >
-            <h3 className="text-2xl text-center">Enemy Waters</h3>
-        </BoardDisplay>
+            title={"Enemy Waters"}
+        />
     );
 }

@@ -6,8 +6,7 @@ export default function PlayerBoard({ playerBoard }){
         <BoardDisplay
             shipData={playerBoard.ships}
             boardData={playerBoard.board}
-        >
-            <h3 className="text-2xl text-center">Your Waters</h3>
-        </BoardDisplay>
+            title={"Your Waters"}
+        />
     )
 }

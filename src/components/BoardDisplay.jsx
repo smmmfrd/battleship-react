@@ -4,7 +4,7 @@ import GridSquare from "./GridSquare";
 
 const shipMargin = 4;
 
-export default function BoardDisplay({ shipData = [], boardData = [], children, displayShips = true,
+export default function BoardDisplay({ title = "", shipData = [], boardData = [], children, displayShips = true,
     handleSquareClick = () => { }, handleSquareEnter = () => { } }) {
     const { boardSize } = useContext(GameContext);
 
@@ -105,11 +105,12 @@ export default function BoardDisplay({ shipData = [], boardData = [], children, 
     });
 
     return (
-        <div className="mx-auto mt-4 relative
-        border rounded-sm p-1 bg-slate-200 border-slate-200">
-            {boardElement()}
-            {shipData.length > 0 && displayShips && shipElements}
-            {children}
-        </div>
+        <section className="mx-auto mt-4 bg-slate-200 border-slate-200">
+            {title.length > 0 && <h3 className="text-2xl text-center">{title}</h3>}
+            <div className="relative border rounded-sm p-1 ">
+                {boardElement()}
+                {shipData.length > 0 && displayShips && shipElements}
+            </div>
+        </section>
     );
 }
