@@ -89,7 +89,7 @@ export default function BoardDisplay({ title = "", shipData = [], boardData = []
                     {boardData.length > 0 && fillGrid()}
                 </div>;
             case "12":
-                return <div className="w-[524px] grid gap-1 grid-cols-12 grid-rows-12">
+                return <div className="grid gap-1 grid-cols-12 grid-rows-12">
                     {boardData.length > 0 && fillGrid()}
                 </div>;
         }
@@ -105,11 +105,12 @@ export default function BoardDisplay({ title = "", shipData = [], boardData = []
     });
 
     return (
-        <section className="mx-auto mt-4 bg-slate-200 border-slate-200">
+        <section className="mx-auto w-max mt-4 bg-slate-200 border-slate-200">
             {title.length > 0 && <h3 className="text-2xl text-center">{title}</h3>}
             <div className="relative border rounded-sm p-1 ">
                 {boardElement()}
                 {shipData.length > 0 && displayShips && shipElements}
+                {children}
             </div>
         </section>
     );
