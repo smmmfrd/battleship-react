@@ -5,7 +5,11 @@ import EnemyBoard from "./EnemyBoard";
 import PlayerBoard from "./PlayerBoard";
 
 export default function Game() {
-    const {playerBoard, setPlayerBoard, enemyBoard, shipLengths, enemyAI, boardSize} = useContext(GameContext);
+    const SHOT_SUCCESS_DELAY = 500;
+    const PLAYER_FIRED_MESSAGE = 'You fired at the enemy!';
+    const ENEMY_FIRED_MESSAGE = 'The enemy fired at you!';
+
+    const { playerBoard, setPlayerBoard, enemyBoard, shipLengths, enemyAI, boardSize, gameDelay } = useContext(GameContext);
     const newGameModal = useRef();
     var numHitsLose = shipLengths.reduce((val, length) => val + length, 0);
     const [endingMessage, setEndingMessage] = useState('');
@@ -19,43 +23,45 @@ export default function Game() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(!playerBoard.board) {
+        if (!playerBoard.board) {
             navigate('/');
         }
     }, [])
 
     useEffect(() => {
         // Make sure the change was not from set up
-        if(enemyBoard.board && enemyBoard.board.some(pos => pos > 0)) {
+        if (enemyBoard.board && enemyBoard.board.some(pos => pos > 0)) {
             // Check if player won
             var enemyHits = enemyBoard.board.reduce((hits, current) => {
-                if(current != 2) {
+                if (current != 2) {
                     return hits;
                 } else {
                     return hits + 1;
                 }
             }, 0);
             setEnemyTurn(true);
+
+            // Setting a delay here
             const enemyResponse = setTimeout(() => {
-                if(enemyHits === numHitsLose) {
+                if (enemyHits === numHitsLose) {
                     gameOver(true);
                 } else {
                     // If not,
                     enemyAttack();
                 }
-            }, 2000);
+            }, gameDelay);
 
             return () => clearTimeout(enemyResponse);
         }
     }, [enemyBoard]);
 
     useEffect(() => {
-        if(!playerBoard.board) {
+        if (!playerBoard.board) {
             return;
         }
 
         var playerHits = playerBoard.board.reduce((hits, current) => {
-            if(current != 2) {
+            if (current != 2) {
                 return hits;
             } else {
                 return hits + 1;
@@ -63,14 +69,16 @@ export default function Game() {
         }, 0);
 
         // Check if enemy won
-        if(playerHits === numHitsLose) {
+        if (playerHits === numHitsLose) {
             gameOver(false);
         }
     }, [playerBoard]);
 
     useEffect(() => {
-        if(gameState.message === 'You fired at the enemy!' || gameState.message === 'The enemy fired at you!') {
-            var enemy = gameState.message === 'The enemy fired at you!';
+        if (gameState.message === PLAYER_FIRED_MESSAGE || gameState.message === ENEMY_FIRED_MESSAGE) {
+            var enemy = gameState.message === ENEMY_FIRED_MESSAGE;
+
+            // Another delay here
             const gameStateUpdate = setTimeout(() => {
                 setGameState(prevState => {
                     return {
@@ -78,17 +86,17 @@ export default function Game() {
                         goodHit: prevState.goodHit
                     }
                 });
-                if(enemy) {
+                if (enemy) {
                     setEnemyTurn(false);
                 }
-            }, 1000);
-            
+            }, SHOT_SUCCESS_DELAY);
+
             return () => clearTimeout(gameStateUpdate);
         }
     }, [gameState]);
 
     function enemyAttack() {
-        switch(enemyAI) {
+        switch (enemyAI) {
             case 'random':
                 randomEnemyAttack();
                 break;
@@ -103,7 +111,7 @@ export default function Game() {
 
     function randomEnemyAttack() {
         var validTargets = playerBoard.board.reduce((array, pos, index) => {
-            if(pos === 0) {
+            if (pos === 0) {
                 return [...array, index];
             } else {
                 return array;
@@ -112,9 +120,9 @@ export default function Game() {
 
         // Update the player's board
         setPlayerBoard(prevBoard => {
-            var newBoard = {...prevBoard};
+            var newBoard = { ...prevBoard };
             newBoard.attacked(validTargets[Math.floor(Math.random() * validTargets.length)], enemyShotUpdate);
-            
+
             return newBoard;
         });
     }
@@ -122,7 +130,7 @@ export default function Game() {
     //every five attacks it is guaranteed to hit the a player ship.
     function semiRandomEnemyAttack() {
         var numAttacks = playerBoard.board.reduce((total, pos) => pos > 0 ? total + 1 : total, 0);
-        if(numAttacks > 0 && (numAttacks + 1) % 5 === 0) {
+        if (numAttacks > 0 && (numAttacks + 1) % 5 === 0) {
             perfectEnemyAttack();
         } else {
             randomEnemyAttack();
@@ -131,7 +139,7 @@ export default function Game() {
 
     function perfectEnemyAttack() {
         var validTargets = playerBoard.board.reduce((array, pos, index) => {
-            if(pos === 0 && playerBoard.shipLocations.includes(index)) {
+            if (pos === 0 && playerBoard.shipLocations.includes(index)) {
                 return [...array, index];
             } else {
                 return array;
@@ -140,7 +148,7 @@ export default function Game() {
 
         // Update the player's board
         setPlayerBoard(prevBoard => {
-            var newBoard = {...prevBoard};
+            var newBoard = { ...prevBoard };
             newBoard.attacked(validTargets[Math.floor(Math.random() * validTargets.length)], enemyShotUpdate);
 
             return newBoard;
@@ -149,23 +157,23 @@ export default function Game() {
 
     async function playerShotUpdate(hit) {
         await new Promise(res => setTimeout(res, 50));
-        setGameState({ 
-            message: 'You fired at the enemy!',
+        setGameState({
+            message: PLAYER_FIRED_MESSAGE,
             goodHit: hit
         });
     }
-    
+
     async function enemyShotUpdate(hit) {
         await new Promise(res => setTimeout(res, 50));
-        setGameState({ 
-            message: 'The enemy fired at you!',
+        setGameState({
+            message: ENEMY_FIRED_MESSAGE,
             goodHit: hit
         });
     }
 
     async function gameOver(playerWon) {
         setDisplayEnemyShips(true);
-        await new Promise(res => setTimeout(res, 2000));
+        await new Promise(res => setTimeout(res, gameDelay * 2));
         setEndingMessage(playerWon ? "You sunk all the enemy ships!" : "All your ships were sunk!");
 
         newGameModal.current.addEventListener('cancel', (event) => {
