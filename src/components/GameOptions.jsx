@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { GameContext } from "../gameContext";
 
 export default function GameOptions() {
-    const { boardSize, setBoardSize, enemyAI, setEnemyAI, gameDelay, setGameDelay } = useContext(GameContext);
+    const { boardSize, setBoardSize, enemyAI, setEnemyAI, gameDelay, setGameDelay, setFromOptions } = useContext(GameContext);
 
     return (
         <main className="w-max mx-auto bg-blue-100 mt-8 p-8 rounded-xl
@@ -32,7 +32,8 @@ export default function GameOptions() {
                     <option value={3000}>3 Seconds</option>
                 </select>
             </form>
-            <Link to="/player" className="py-2 text-center bg-blue-300 hover:underline rounded-md">
+            <Link to="/player" className="py-2 text-center bg-blue-300 hover:underline rounded-md" 
+                onClick={() => setFromOptions(true)}>
                 Make Your Board
             </Link>
         </main>

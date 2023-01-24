@@ -8,6 +8,7 @@ function GameContextProvider({ children }) {
     const [shipLengths, setShipLengths] = useState([2, 3, 3, 4, 5]);
     const [enemyAI, setEnemyAI] = useState('random');
     const [gameDelay, setGameDelay] = useState(2000);
+    const [fromOptions, setFromOptions] = useState(false);
 
     return (
         <GameContext.Provider value={{
@@ -16,7 +17,8 @@ function GameContextProvider({ children }) {
             boardSize, setBoardSize,
             shipLengths, setShipLengths,
             enemyAI, setEnemyAI,
-            gameDelay, setGameDelay
+            gameDelay, setGameDelay,
+            fromOptions, setFromOptions
         }}>
             {children}
         </GameContext.Provider>

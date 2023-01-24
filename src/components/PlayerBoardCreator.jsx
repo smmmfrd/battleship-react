@@ -1,21 +1,28 @@
 import { useState, useRef, useEffect, useCallback, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GameContext } from "../gameContext";
 import BoardDisplay from "./BoardDisplay";
 import GameBoard from "../gameboard";
 
 export default function PlayerBoardCreator() {
     var shipLengthIndex = useRef(0);
-    const { setPlayerBoard: setContextBoard, setEnemyBoard, boardSize, shipLengths } = useContext(GameContext);
+    const { setPlayerBoard: setContextBoard, setEnemyBoard, boardSize, shipLengths, fromOptions, setFromOptions } = useContext(GameContext);
 
     const [playerBoard, setPlayerBoard] = useState(GameBoard(boardSize));
     const [currentPosition, setCurrentPosition] = useState(0);
-    const [shipStats, setShipStats] = useState(
-        {
-            length: shipLengths[shipLengthIndex.current],
-            vertical: false
-        });
+    const [shipStats, setShipStats] = useState({
+        length: shipLengths[shipLengthIndex.current],
+        vertical: false
+    });
     const shipPlacer = useRef();
+
+    const navigate = useNavigate();
+    // Initiliazing check to make sure the player came from the options menu
+    useEffect(() => {
+        if (!fromOptions) {
+            navigate('/');
+        }
+    },[])
 
     const handleKeyPress = useCallback(event => {
         // If the player pressed "R"
@@ -130,8 +137,10 @@ export default function PlayerBoardCreator() {
                 {shipLengthIndex.current >= shipLengths.length ?
                     <Link to="/game" className="block mt-4 mx-auto bg-blue-600 text-neutral-50 w-max px-2 py-1 rounded-xl text-center hover:underline" onClick={() => {
                         setContextBoard(playerBoard);
-                        // Clearing out any old data here.
+                        // Clearing out any old data on the enemy board here.
                         setEnemyBoard(GameBoard(boardSize));
+                        
+                        setFromOptions(false);
                     }}>
                         Start Game
                     </Link>
