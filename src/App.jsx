@@ -1,9 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { GameContextProvider } from "./gameContext";
 
-import PlayerBoardCreator from "./components/PlayerBoardCreator";
-import Game from "./components/Game";
-import GameOptions from "./components/GameOptions";
+import GameOptions from "./pages/GameOptions";
+import PlayerBoardCreator from "./pages/PlayerBoardCreator";
+import Game from "./pages/Game";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 

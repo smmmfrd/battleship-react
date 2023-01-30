@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GameContext } from "../gameContext";
-import BoardDisplay from "./BoardDisplay";
+import BoardDisplay from "../components/BoardDisplay";
 import GameBoard from "../gameboard";
 
 export default function PlayerBoardCreator() {

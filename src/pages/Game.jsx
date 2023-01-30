@@ -1,8 +1,8 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GameContext } from "../gameContext";
-import EnemyBoard from "./EnemyBoard";
-import PlayerBoard from "./PlayerBoard";
+import EnemyBoard from "../components/EnemyBoard";
+import PlayerBoard from "../components/PlayerBoard";
 
 export default function Game() {
     const SHOT_SUCCESS_DELAY = 500;
@@ -188,7 +188,7 @@ export default function Game() {
                 <div className="flex flex-col text-center gap-6">
                     <h2 className="text-4xl underline">{endingMessage}</h2>
                     <div className="bg-blue-600 text-neutral-50 w-max px-2 py-1 rounded-xl mx-auto text-center hover:underline">
-                        <Link to="/">Restart</Link>
+                        <Link to="/">New Game</Link>
                     </div>
                 </div>
             </dialog>
